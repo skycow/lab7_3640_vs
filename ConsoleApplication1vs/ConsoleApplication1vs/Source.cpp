@@ -12,6 +12,7 @@ int main(void) {
 //	float Fc = 98.4 * M;
 //	float Fs = 8 * M;
 	int D = 2; //downsample by 2
+	int U = 1;
 	
 	//Get input length
 	int Lx = 0, countl;
@@ -29,7 +30,7 @@ int main(void) {
 
 
 	FILE *fx = fopen("freq94_8_bw_4.bin", "rb"); //open input file
-	FILE *fh = fopen("hlpfdown2.bin", "rb"); //open inpulse file
+	FILE *fh = fopen("lpf_U1_D2_L120.bin", "rb"); //open inpulse file
 	FILE *fy = fopen("outfile.bin", "wb"); //open output file
 
 	dsp_file_header headh, heady;
@@ -41,10 +42,13 @@ int main(void) {
 	heady.d2 = 0;
 	fwrite(&heady, sizeof(int), 5, fy);
 
+	int M = headh.d0;
+
 
 	float *x = (float*)calloc(sizeof(float), IOBUFFSIZE * 2);
 	float *h = (float*)calloc(sizeof(float), headh.d0);
 	float *y = (float*)calloc(sizeof(float), IOBUFFSIZE * 2);
+	float *g = (float*)calloc(sizeof(float), IOBUFFSIZE * 2);
 	float rx[IOBUFFSIZE], ix[IOBUFFSIZE], ry[IOBUFFSIZE], iy[IOBUFFSIZE];
 
 	//garbage
@@ -75,9 +79,9 @@ int main(void) {
 	xlen = fread(x, sizeof(float), IOBUFFSIZE, fx);//read in first chunk of input samples
 		while (xlen>0) {
 			for (i = 0; i<xlen; i++) {
-				k = (k + M‐1) % M;
+				k = (k + M - 1) % M;
 				g[k] = x[i];
-				l = (l + D‐1) % D;
+				l = (l + D - 1) % D;
 				if (l == 0) {
 					l = D;
 					for (j = 0; j<U; j++) {
@@ -101,9 +105,12 @@ int main(void) {
 		ylen = 0;
 	}
 
-
-
-
+	fclose(fx);
+	fclose(fy);
+	fclose(fh);
+	free(x);
+	free(h);
+	free(y);
 
 	return 1;
 }
