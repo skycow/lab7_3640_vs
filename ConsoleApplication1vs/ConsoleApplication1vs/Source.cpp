@@ -33,6 +33,7 @@ int main(void) {
 	FILE *fx = fopen("freq94_8_bw_4.bin", "rb"); //open input file
 	FILE *fh = fopen("lpf_U1_D2_L100.bin", "rb"); //open inpulse file
 	FILE *fy = fopen("outfile.bin", "wb"); //open output file
+	//FILE *fyi = fopen("imaginary.bin", "wb"); //open output file
 
 	dsp_file_header headh, heady;
 	fread(&headh, sizeof(dsp_file_header), 1, fh);
@@ -71,7 +72,8 @@ int main(void) {
 	int i;//index for input data buffers
 	int j;
 	int k = 0;//indexforcirculardatabuffer
-	int l = 1;
+	//int l = 1;
+	int l = D;
 	int m;
 	int n;//convolution loop index for filter coefficients and circular data buffer
 	xlen = fread(x, sizeof(float), IOBUFFSIZE*2, fx);//read in first chunk of input samples
@@ -104,6 +106,10 @@ int main(void) {
 				}
 			}
 			xlen = fread(x, sizeof(float), IOBUFFSIZE, fx);
+			for (int i = 0; i < IOBUFFSIZE; i++) {
+				rx[i] = x[i * 2];
+				ix[i] = x[i * 2 + 1];
+			}
 		}
 	//Finish writing last chunk of output samples
 	if (ylen>0) {

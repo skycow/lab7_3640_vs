@@ -1,7 +1,7 @@
-function myUDfilter(U,D,L,fp,fs)
+function myUDfilter(U,D,L,f,part)
 N=max([U,D]);
-fpass=fp;%0.9/(2*N);
-fstop=fs;%1.1/(2*N);
+fpass=1/f;%0.9/(2*N);
+fstop=1/2-1/f;%1.1/(2*N);
 f1=(fstop+fpass)/2;
 f2=(fstop-fpass)/2;
 n=[-L:L].';
@@ -37,7 +37,7 @@ xlabel 'frequency'
 ylabel 'magnitude'
 hold off;
 grid on;
-file_name=sprintf('lpf_U%d_D%d_L%d.bin',U,D,L);
+file_name=sprintf('lpf_U%d_D%d_L%d_%d_%d.bin',U,D,L,f,part);
 fid=fopen(file_name,'wb');
 fwrite(fid,[1 1 length(h) 1 0],'int');
 fwrite(fid,h,'float');
