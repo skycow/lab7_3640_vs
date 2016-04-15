@@ -1,0 +1,13 @@
+close all;
+fid = fopen('outfile.bin','rb');
+%head = fread(fid,5,'int');
+x = fread(fid,inf,'float');
+fclose(fid);
+head(4) = length(x);
+subplot(4,1,3);%figure;
+plot(0:(1/head(4)):((length(x)/head(4))-(1/head(4))),x);
+axis tight;
+title('Noisy');
+subplot(4,1,1);%figure;
+NFFT = 1024;
+spectrogram(x,hamming(NFFT),round(0.95*NFFT),NFFT,head(4));
