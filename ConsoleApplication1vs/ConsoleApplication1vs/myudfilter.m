@@ -1,7 +1,7 @@
-function myUDfilter(U,D,L)
+function myUDfilter(U,D,L,fp,fs)
 N=max([U,D]);
-fpass=0.9/(2*N);
-fstop=1.1/(2*N);
+fpass=fp;%0.9/(2*N);
+fstop=fs;%1.1/(2*N);
 f1=(fstop+fpass)/2;
 f2=(fstop-fpass)/2;
 n=[-L:L].';
